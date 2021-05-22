@@ -41,7 +41,7 @@ const actionFunc = async (username, password, recipient, message, captchaToken) 
     try {
       console.log("Importing existing cookies...");
       const cookiesJSON = await fs.readFile(
-        path.resolve(__dirname, `.cahce/${md5Username}.cookies.json`)
+        path.resolve(__dirname, `.cache/${md5Username}.cookies.json`)
       );
       cookies = JSON.parse(cookiesJSON);
     } catch (error) {
@@ -61,11 +61,11 @@ const actionFunc = async (username, password, recipient, message, captchaToken) 
 
     try {
       console.log("Successfully logged into TextNow!");
-      // Save cookies to file
-      await fs.writeFile(
-        path.resolve(__dirname, `.cahce/${md5Username}.cookies.json`),
-        JSON.stringify(cookies)
-      );
+      const cache_file_path = path.resolve(__dirname, `.cache/${md5Username}.cookies.json`);
+      // Create directory, and save cookies to file.
+      await fs.mkdir(path.dirname(cache_file_path), { recursive: true }).then(() => {
+        fs.writeFile(cache_file_path, JSON.stringify(cookies));
+      });
     } catch (error) {
       console.log("Failed to save cookies to file.");
     }

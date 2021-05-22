@@ -17,6 +17,14 @@ jobs:
           node-version: "12.x" # 使用node 12版本作为运行环境
       - name: Install dependencies
         run: npm install # 安装依赖
+      - name: Cache multiple paths
+        uses: actions/cache@v2
+        with:
+          path: |
+            .cache
+            ~/.cache
+          key: ${{ secrets.CACHE_NAME }}-${{ github.run_id }} # CACHE_NAME 缓存名字，防止泄漏，自行设置
+          restore-keys: ${{ secrets.CACHE_NAME }}-
       - name: Run autosend
         env:
           TEXTNOW_USERNAME: ${{secrets.TEXTNOW_USERNAME}} # 获取并设置定义好的用户名环境变量值
